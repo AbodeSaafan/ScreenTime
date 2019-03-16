@@ -1,0 +1,1 @@
+This folder will be used to store material needed for testing the project such as images and videos.
