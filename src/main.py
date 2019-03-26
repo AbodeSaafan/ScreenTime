@@ -2,26 +2,16 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-
-# Test function
-def getIthFrame(cap, i):
-    for x in range(i-1):
-        cap.read()
-        
-    return cap.read()
+import VideoReader
 
 
-# This loads the video file
-cap = cv2.VideoCapture('../lib/Sample_1.mp4')
+vr = VideoReader.VideoReader('../lib/Sample_1.mp4', sampleRate = 1)
 
-# This grabs a frame from the capture
-ret, frame = getIthFrame(cap, 225)
+# Skipping a minute in for testing
+for i in range(10):
+    vr.getNextFrame()
 
-
-# This converts the frame into rgb
-visFrame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-
-# THis displays it
+# This displays it
 plt.figure()
 plt.axis('off')
-plt.imshow(visFrame)
+plt.imshow(vr.getNextFrame())
