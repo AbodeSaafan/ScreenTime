@@ -1,4 +1,5 @@
-import cv2
+from cv2 import VideoCapture, cvtColor, COLOR_BGR2RGB, CAP_PROP_FPS
+from os import path
 
 '''
 This class interfaces with the video file and keeps track of
@@ -6,10 +7,11 @@ which frames we want to grab based on sample rate and frame rate
 '''
 class VideoReader:
     def __init__(self, videoPath, sampleRate):
-        # TODO: Check that video path is valid
-        self.cap = cv2.VideoCapture(videoPath)
+        if(not(path.isfile(videoPath))):
+            raise ValueError("Invalid video file")
+        self.cap = VideoCapture(videoPath)
         
-        self.frameRate = self.cap.get(cv2.CAP_PROP_FPS)
+        self.frameRate = self.cap.get(CAP_PROP_FPS)
         
         if (sampleRate < 1 or sampleRate > self.frameRate):
             raise ValueError("Invalid sample rate")
@@ -25,6 +27,6 @@ class VideoReader:
         ret, frame = self.cap.read()
         
         if(ret):
-            return cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+            return cvtColor(frame,COLOR_BGR2RGB)
         
         return False
