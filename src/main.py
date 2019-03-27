@@ -10,10 +10,20 @@ fd = FaceDetector.FaceDetector()
 
 # Skipping a minute in for testing
 for i in range(40):
-    frame = fd.detectFace(vr.getNextFrame())
+    vr.getNextFrame()
+
+fd.loadFrame(vr.getNextFrame())
+
+faces = fd.detectFaces()
+
+visFaces = fd.extractFaces(faces)
+
     
 # This displays it
 plt.figure()
 plt.axis('off')
-plt.imshow(frame)
+plt.imshow(visFaces[0])
 plt.show()
+
+plt.figure()
+plt.imshow(fd.showFaces(faces))
