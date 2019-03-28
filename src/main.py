@@ -4,12 +4,14 @@ import cv2
 import matplotlib.pyplot as plt
 import VideoReader
 import FaceDetector
+import FaceCluster
 
 vr = VideoReader.VideoReader('../lib/Sample_1.mp4', sampleRate = 1)
 fd = FaceDetector.FaceDetector()
+fc = FaceCluster.FaceCluster()
 
 # Skipping a minute in for testing
-for i in range(40):
+for i in range(42):
     vr.getNextFrame()
 
 fd.loadFrame(vr.getNextFrame())
@@ -18,6 +20,7 @@ faces = fd.detectFaces()
 
 visFaces = fd.extractFaces(faces)
 
+fc.addFaces(visFaces)
     
 # This displays it
 plt.figure()
