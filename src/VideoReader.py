@@ -27,6 +27,8 @@ class VideoReader:
         ret, frame = self.cap.read()
         
         if(ret):
-            return cvtColor(frame,COLOR_BGR2RGB)
+            #return cvtColor(frame,COLOR_BGR2RGB)
+            return frame
         
-        return False
+        else:
+            return []

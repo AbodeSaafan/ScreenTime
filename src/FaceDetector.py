@@ -35,6 +35,7 @@ class FaceDetector():
     # Calls detect face or maybe not? and then returns frame that shows it
     # Eats the input from detectFaces ? 
     def showFaces(self, faces):
+        frame = self.frame
         for (x,y,w,h) in faces:
             frame = cv2.rectangle(self.frame,(x,y),(x+w,y+h),(255,0,0),2)
             
