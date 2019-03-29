@@ -38,19 +38,32 @@ fc = FaceCluster.FaceCluster()
 ## IT WILL OUTPUT A VIDEO WITH DETECTED FRAMES ##
 
 ## KEEP THE FILE NAME THE SAME SO THAT IT IS GIT IGNORED ##
-out = cv2.VideoWriter('test_temp.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 5, (1280,720))
+#out = cv2.VideoWriter('test_temp.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 5, (1280,720))
+#
+#frame = vr.getNextFrame()
+#
+#while(len(frame) > 0 ):
+#    fd.loadFrame(frame)
+#    faces = fd.detectFaces()
+#    newFrame = fd.showFaces(faces)
+#    
+#    out.write(newFrame)
+#    
+#    frame = vr.getNextFrame()
+#
+#out.release()
+
+################################################
+
 
 frame = vr.getNextFrame()
 
 while(len(frame) > 0 ):
     fd.loadFrame(frame)
     faces = fd.detectFaces()
-    newFrame = fd.showFaces(faces)
-    
-    out.write(newFrame)
+    fc.addFaces(fd.extractFaces(faces))
     
     frame = vr.getNextFrame()
 
-out.release()
-
-################################################
+fc.startCluster()
+fc.showClusterResults()
