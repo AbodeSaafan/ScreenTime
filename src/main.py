@@ -103,8 +103,14 @@ c1 =  fc.getClusterImages(0)
 
 
 #%%
+def haha(f, g):
+    print('computing')
+    
+    g.setProgressMax(100)
+    g.progress(50)
+    
+
 import ScreenTimeGui
-gui = ScreenTimeGui.ScreenTimeGui()
-gui.display()
+gui = ScreenTimeGui.ScreenTimeGui(haha)
 
 #%%
