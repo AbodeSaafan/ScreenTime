@@ -62,8 +62,9 @@ while(len(frame) > 0 ):
     fd.loadFrame(frame)
     faces = fd.detectFaces()
     eye = fd.detectEye()
-
-    fc.addFaces(fd.extractFaces(faces, eye))
+    profile = fd.detectProfileFaces()
+    
+    fc.addFaces(fd.extractFaces(faces, eye, profile))
     
     frame = vr.getNextFrame()
 
