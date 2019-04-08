@@ -1,10 +1,15 @@
 # Imports
+
+#TODO only import needed stuff
+from Tkinter import * 
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import VideoReader
 import FaceDetector
 import FaceCluster
+import ScreenTimeGui
+from PIL import Image, ImageTk
 
 vr = VideoReader.VideoReader('../lib/Sample_1.mp4', sampleRate = 1)
 fd = FaceDetector.FaceDetector()
@@ -69,4 +74,44 @@ while(len(frame) > 0 ):
     frame = vr.getNextFrame()
 
 fc.startCluster()
-fc.showClusterResults()
+#fc.showClusterResults()
+#x = fc.getScreenTimeShare()
+c1 =  fc.getClusterImages(0)
+
+## GUI CODE ## 
+#%%
+#c1 =  fc.getClusterImages(0)
+#def moveImage(s):
+#    
+#    img = ImageTk.PhotoImage(master = master, image=Image.fromarray(c1[int(s)-1]))
+#    canvas.itemconfig(image_on_canvas, image = img)
+#    print(clusterImageScale.get())
+#
+#master = Tk()
+#
+#clusterImageScale = Scale(master, from_=1, to=len(c1), orient=HORIZONTAL, command=moveImage)
+#clusterImageScale.pack()
+#
+#img = ImageTk.PhotoImage(master = master, image=Image.fromarray(c1[0]))
+#canvas = Canvas(master,width=300,height=300)
+#canvas.pack()
+#image_on_canvas = canvas.create_image(20,20, anchor="nw", image=img)
+#
+#
+#mainloop()
+#%%
+## GUI CODE ##%%
+
+
+#%%
+def haha(f, g):
+    print('computing')
+    
+    g.setProgressMax(100)
+    g.progress(50)
+    
+
+import ScreenTimeGui
+gui = ScreenTimeGui.ScreenTimeGui(haha)
+
+#%%

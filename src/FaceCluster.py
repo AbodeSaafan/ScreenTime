@@ -24,7 +24,7 @@ class FaceCluster():
             # Creating a blob to pass into the network
             # TODO read more about this though 
             faceBlob = cv2.dnn.blobFromImage(cv2.resize(face, (96,96)), 
-                                             1.0/512, # Scale factor
+                                             1.0/100, # Scale factor
                                              (96, 96)) # Spatial size
 
             self.embedder.setInput(faceBlob)
@@ -36,11 +36,11 @@ class FaceCluster():
         return self.faceVectors
     
     def startCluster(self):
-        self.cluster = DBSCAN(metric="euclidean", eps=.45, min_samples=3).fit(self.faceVectors)
+        self.cluster = DBSCAN(metric="euclidean", eps=.44).fit(self.faceVectors)
         
     def showClusterResults(self):
         # Loop through each cluster
-        for c in range(-1, max(self.cluster.labels_ + 1)):
+        for c in range(-1, max(self.cluster.labels_) + 1):
             matches = np.where(self.cluster.labels_ == c)[0]
             
             plt.figure()
@@ -50,4 +50,25 @@ class FaceCluster():
                 plt.subplot(5,5, i+1)
                 plt.axis('off')
                 plt.imshow(cv2.cvtColor(self.actualFaces[matches[i]], cv2.COLOR_BGR2RGB))
+    
+    def getClusterImages(self, c):
+        clusterPics = []
+        matches = np.where(self.cluster.labels_ == c)[0]
+            
+        plt.figure()
+        for i in range(len(matches)):
+            clusterPics.append(cv2.cvtColor(self.actualFaces[matches[i]], cv2.COLOR_BGR2RGB))
+        return clusterPics
+    
+    def getScreenTimeShare(self):
+        clusterShare = []
         
+        # All the positively identified faces
+        posFaces = len(np.where(self.cluster.labels_ != -1)[0])
+        
+        # Loop through each cluster
+        for c in range(0, max(self.cluster.labels_) + 1):
+            matches = np.where(self.cluster.labels_ == c)[0]
+            
+            clusterShare.append((float(len(matches))/posFaces)*100.0)
+        return clusterShare
