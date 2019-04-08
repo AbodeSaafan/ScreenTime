@@ -1,4 +1,4 @@
-from cv2 import VideoCapture, cvtColor, COLOR_BGR2RGB, CAP_PROP_FPS
+from cv2 import VideoCapture, CAP_PROP_FPS, CAP_PROP_FRAME_COUNT
 from os import path
 
 '''
@@ -12,6 +12,10 @@ class VideoReader:
         self.cap = VideoCapture(videoPath)
         
         self.frameRate = self.cap.get(CAP_PROP_FPS)
+        
+        # Calculating how many frames we will look at
+        totalFrames = self.cap.get(CAP_PROP_FRAME_COUNT)
+        self.totalSample = int((totalFrames / self.frameRate) / sampleRate)
         
         if (sampleRate < 1 or sampleRate > self.frameRate):
             raise ValueError("Invalid sample rate")
@@ -27,7 +31,6 @@ class VideoReader:
         ret, frame = self.cap.read()
         
         if(ret):
-            #return cvtColor(frame,COLOR_BGR2RGB)
             return frame
         
         else:

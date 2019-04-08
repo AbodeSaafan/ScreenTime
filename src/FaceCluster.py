@@ -40,7 +40,9 @@ class FaceCluster():
         
     def showClusterResults(self):
         # Loop through each cluster
-        for c in range(-1, max(self.cluster.labels_) + 1):
+        self.numOfClusters = max(self.cluster.labels_)
+        
+        for c in range(-1, self.numOfClusters + 1):
             matches = np.where(self.cluster.labels_ == c)[0]
             
             plt.figure()

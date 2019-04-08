@@ -1,19 +1,12 @@
 # Imports
 
 #TODO only import needed stuff
-from Tkinter import * 
-import numpy as np
-import cv2
-import matplotlib.pyplot as plt
 import VideoReader
 import FaceDetector
 import FaceCluster
 import ScreenTimeGui
-from PIL import Image, ImageTk
 
-vr = VideoReader.VideoReader('../lib/Sample_1.mp4', sampleRate = 1)
-fd = FaceDetector.FaceDetector()
-fc = FaceCluster.FaceCluster()
+
 
 ## Skipping a minute in for testing
 #for i in range(42):
@@ -61,57 +54,57 @@ fc = FaceCluster.FaceCluster()
 ################################################
 
 
-frame = vr.getNextFrame()
-
-while(len(frame) > 0 ):
-    fd.loadFrame(frame)
-    faces = fd.detectFaces()
-    eye = fd.detectEye()
-    profile = fd.detectProfileFaces()
-    
-    fc.addFaces(fd.extractFaces(faces, eye, profile))
-    
-    frame = vr.getNextFrame()
-
-fc.startCluster()
-#fc.showClusterResults()
-#x = fc.getScreenTimeShare()
-c1 =  fc.getClusterImages(0)
-
-## GUI CODE ## 
-#%%
-#c1 =  fc.getClusterImages(0)
-#def moveImage(s):
+#frame = vr.getNextFrame()
+#
+#while(len(frame) > 0 ):
+#    fd.loadFrame(frame)
+#    faces = fd.detectFaces()
+#    eye = fd.detectEye()
+#    profile = fd.detectProfileFaces()
 #    
-#    img = ImageTk.PhotoImage(master = master, image=Image.fromarray(c1[int(s)-1]))
-#    canvas.itemconfig(image_on_canvas, image = img)
-#    print(clusterImageScale.get())
+#    fc.addFaces(fd.extractFaces(faces, eye, profile))
+#    
+#    frame = vr.getNextFrame()
 #
-#master = Tk()
-#
-#clusterImageScale = Scale(master, from_=1, to=len(c1), orient=HORIZONTAL, command=moveImage)
-#clusterImageScale.pack()
-#
-#img = ImageTk.PhotoImage(master = master, image=Image.fromarray(c1[0]))
-#canvas = Canvas(master,width=300,height=300)
-#canvas.pack()
-#image_on_canvas = canvas.create_image(20,20, anchor="nw", image=img)
-#
-#
-#mainloop()
-#%%
-## GUI CODE ##%%
+#fc.startCluster()
+##fc.showClusterResults()
+##x = fc.getScreenTimeShare()
+#c1 =  fc.getClusterImages(0)
+
 
 
 #%%
-def haha(f, g):
-    print('computing')
-    
-    g.setProgressMax(100)
-    g.progress(50)
-    
+def computeFunction(vidPath, g):   
+    vr = VideoReader.VideoReader(vidPath, sampleRate = 1)
+    fd = FaceDetector.FaceDetector()
+    fc = FaceCluster.FaceCluster()
 
-import ScreenTimeGui
-gui = ScreenTimeGui.ScreenTimeGui(haha)
+    frame = vr.getNextFrame()
+    
+    # Number of frames we are processing
+    g.setProgressMax(vr.totalSample)
+    
+    
+    while(len(frame) > 0):
+        fd.loadFrame(frame)
+        faces = fd.detectFaces()
+        eye = fd.detectEye()
+        profile = fd.detectProfileFaces()
+        
+        fc.addFaces(fd.extractFaces(faces, eye, profile))
+        
+        frame = vr.getNextFrame()
+        g.progress()
+
+    g.clusterState()
+    fc.startCluster()
+    #fc.showClusterResults()
+    
+    x = fc.getScreenTimeShare()
+#    fc.getClusterImages(0)
+    
+   
+if __name__ == "__main__":
+    gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
 
 #%%

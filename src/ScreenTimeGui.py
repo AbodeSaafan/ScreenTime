@@ -1,6 +1,9 @@
 from Tkinter import Tk, Label, Button, mainloop
 from ttk import Progressbar
 import tkFileDialog
+from os import path
+from threading import Thread
+from multiprocessing import Process, Manager, Queue
 
 class ScreenTimeGui:
     InitialLoad = 0
@@ -40,9 +43,10 @@ class ScreenTimeGui:
                                              mode='rb',
                                              title='Select the video')
         if(vidFile != None):
-            self.__startComputation(vidFile)
+            vidPath = path.abspath(vidFile.name)
+            self.__startComputation(vidPath)
             
-    def __startComputation(self, vidFile):
+    def __startComputation(self, vidPath):
         # Change the UI to reflect the status
         self.__browseButton.grid_remove()
         
@@ -50,18 +54,31 @@ class ScreenTimeGui:
         
         self.__progBar.grid(row=1, column=0)
         
+        #self.p1 = Process(target=self.__compute, args = (vidPath, self))
+        #self.p1.start()
+        #self.__progBar.start(80)
+        #self.after(20, self.progress)
+        
         # Call the compute function
-        self.__compute(vidFile)
+        th = Thread(target =  self.__compute, args = (vidPath, self))
+        th.start()
+        
         
     def setProgressMax(self, maxVal):
         # Sets up the maximum amount for the progress bar and starts it
-        self.__progBar["maximum"] = maxVal
-        self.__instructionsText.config(text="Computing ... (%d/%d)" \
+        self.__progBar["maximum"] = maxVal + 1
+        self.__instructionsText.config(text="Face detection on video ... (%d/%d)" \
                                        % (0,maxVal))
         
-    def progress(self, newVal):
-        # Updates the progress bar
-        self.__progBar["value"] = newVal
-        self.__instructionsText.config(text="Computing ... (%d/%d)" \
+    def progress(self):
+        # Updates the progress bar by incrementing 1 
+        newVal = self.__progBar["value"] + 1
+        
+        self.__instructionsText.config(text="Face detection on video... (%d/%d)" \
                                        % (newVal,self.__progBar["maximum"]))
-        self.__progBar.update()
+        self.__progBar.step()
+        
+    def clusterState(self):
+        self.__instructionsText.config(text="Clustering the faces ...")
+        self.__progBar.config(mode="indeterminate")
+        self.__progBar.start()
