@@ -3,13 +3,14 @@ from ttk import Progressbar
 import tkFileDialog
 from os import path
 from threading import Thread
-from multiprocessing import Process, Manager, Queue
 
 class ScreenTimeGui:
     InitialLoad = 0
     mainFont = ("Helvetica", 18)
 
     def __init__(self, computeFunc):
+        self.fc = []
+        
         # Compute function that we will use later
         self.__compute = computeFunc
         
@@ -53,15 +54,10 @@ class ScreenTimeGui:
         self.__instructionsText.config(text="Setting up ...")
         
         self.__progBar.grid(row=1, column=0)
-        
-        #self.p1 = Process(target=self.__compute, args = (vidPath, self))
-        #self.p1.start()
-        #self.__progBar.start(80)
-        #self.after(20, self.progress)
-        
+
         # Call the compute function
-        th = Thread(target =  self.__compute, args = (vidPath, self))
-        th.start()
+        self.th = Thread(target =  self.__compute, args = (vidPath, self))
+        self.th.start()
         
         
     def setProgressMax(self, maxVal):
@@ -79,6 +75,40 @@ class ScreenTimeGui:
         self.__progBar.step()
         
     def clusterState(self):
+        # Changes the GUI to show that clustering is being processed
         self.__instructionsText.config(text="Clustering the faces ...")
         self.__progBar.config(mode="indeterminate")
         self.__progBar.start()
+        
+        self.__seeResultsButton = Button(self.__master,
+                                   command=self.showClusterResults,
+                                   font=ScreenTimeGui.mainFont,
+                                   text="Show results")
+        
+    def enableClusterButton(self):
+        # Make progress bar full and stop it
+        self.__progBar.stop()
+        self.__progBar.config(mode="determinate")
+        self.__progBar["maximum"] = self.__progBar["value"] + 1.001
+        self.__progBar.step()
+        
+        
+        self.__instructionsText.config(text="Results are ready")
+        self.__seeResultsButton.grid(row=2, column=0)
+        
+    def __backButtonPressed(self):
+        print("YAY MAN YOU PRESSED BACK WOOhooo")
+        
+    def showClusterResults(self):
+        self.__seeResultsButton.grid_forget()
+        
+        # Change UI to get ready for cluster results
+        self.__instructionsText.grid_forget()
+        self.__progBar.grid_forget()
+        
+        self.__backClusterButton = Button(self.__master,
+                                          command=self.__backButtonPressed,
+                                          font=ScreenTimeGui.mainFont,
+                                          text="<")
+        self.__backClusterButton.grid(row=0, column=0, padx=(0, 60))
+        

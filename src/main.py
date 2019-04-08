@@ -84,7 +84,6 @@ def computeFunction(vidPath, g):
     # Number of frames we are processing
     g.setProgressMax(vr.totalSample)
     
-    
     while(len(frame) > 0):
         fd.loadFrame(frame)
         faces = fd.detectFaces()
@@ -95,16 +94,20 @@ def computeFunction(vidPath, g):
         
         frame = vr.getNextFrame()
         g.progress()
-
+        
     g.clusterState()
     fc.startCluster()
+    
+    g.fc = fc
+    g.enableClusterButton()
+    #g.showClusterResults(fc)
+    
     #fc.showClusterResults()
     
-    x = fc.getScreenTimeShare()
+    #x = fc.getScreenTimeShare()
 #    fc.getClusterImages(0)
     
    
 if __name__ == "__main__":
     gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
-
 #%%
