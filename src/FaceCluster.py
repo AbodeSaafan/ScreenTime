@@ -37,10 +37,10 @@ class FaceCluster():
     
     def startCluster(self):
         self.cluster = DBSCAN(metric="euclidean", eps=.44).fit(self.faceVectors)
+        self.numOfClusters = max(self.cluster.labels_)
         
     def showClusterResults(self):
         # Loop through each cluster
-        self.numOfClusters = max(self.cluster.labels_)
         
         for c in range(-1, self.numOfClusters + 1):
             matches = np.where(self.cluster.labels_ == c)[0]
