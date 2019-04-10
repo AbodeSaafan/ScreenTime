@@ -15,7 +15,7 @@ class VideoReader:
         
         # Calculating how many frames we will look at
         totalFrames = self.cap.get(CAP_PROP_FRAME_COUNT)
-        self.totalSample = int((totalFrames / self.frameRate) / sampleRate)
+        self.totalSample = int((totalFrames / self.frameRate) * sampleRate)
         
         if (sampleRate < 1 or sampleRate > self.frameRate):
             raise ValueError("Invalid sample rate")
