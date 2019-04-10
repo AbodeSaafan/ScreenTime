@@ -5,7 +5,8 @@ import VideoReader
 import FaceDetector
 import FaceCluster
 import ScreenTimeGui
-
+import matplotlib.pyplot as plt
+import Dbscan
 
 
 ## Skipping a minute in for testing
@@ -109,5 +110,28 @@ def computeFunction(vidPath, g):
     
    
 if __name__ == "__main__":
-    gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
+    #gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
+    vr = VideoReader.VideoReader("../lib/sample_1.mp4", sampleRate = 1)
+    fd = FaceDetector.FaceDetector()
+    fc = FaceCluster.FaceCluster()
+    db = Dbscan.Dbscan(0.5, 3)
+   
+    frame = vr.getNextFrame()   
+    
+    i = 0
+    while(len(frame) > 0 and i < 10):
+        i+= 1
+        fd.loadFrame(frame)
+        faces = fd.detectFaces()
+        eye = fd.detectEye()
+        profile = fd.detectProfileFaces()
+        
+        fc.addFaces(fd.extractFaces(faces, eye, profile))
+        
+        frame = vr.getNextFrame()
+        
+    db.fit(fc.faceVectors)
+    
+    
+    
 #%%
