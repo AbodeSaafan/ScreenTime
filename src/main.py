@@ -125,18 +125,19 @@ if __name__ == "__main__":
 #    gc.fitCNN()
 
 #
-    filenames = glob.glob("../data/test/female/*.jpg")
-    filenames.sort()
-    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
-    
+#    filenames = glob.glob("../data/test/female/*.jpg")
+#    filenames.sort()
+#    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
+#    
     ci = ClassifyImage.ClassifyImage()
-    model = ci.loadModelandWeights("50epoch20batch_model")
-    results = []
-    for i in range(len(images)):
-        results.append(ci.classifyImage(model, images[i]))
-        
-    
-    print(results.count('female'))
+    ci.testingAccuracy('10epoch20batch_model', "../data/test/male/*.jpg", )
+#    model = ci.loadModelandWeights("50epoch20batch_model")
+#    results = []
+#    for i in range(len(images)):
+#        results.append(ci.classifyImage(model, images[i]))
+#        
+#    
+#    print(results.count('female'))
     
     
 

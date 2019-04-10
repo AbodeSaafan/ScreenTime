@@ -81,7 +81,7 @@ model.fit_generator(
 
 # serialize model to JSON
 modelJSON = model.to_json()
-with open("10epoch20batch_model.json", "w") as jsonfile:
+    with open("10epoch20batch_model.json", "w") as jsonfile:
     jsonfile.write(modelJSON)
 # serialize weights to HDF5
 model.save_weights("10epoch20batch_model.h5")
