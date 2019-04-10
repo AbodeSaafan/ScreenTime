@@ -5,6 +5,16 @@ import VideoReader
 import FaceDetector
 import FaceCluster
 import ScreenTimeGui
+import GenderClassifier
+import ClassifyImage
+import cv2
+import glob
+import matplotlib.pyplot as plt
+from PIL import Image
+import glob
+from keras.preprocessing import image
+
+
 
 
 
@@ -88,9 +98,9 @@ def computeFunction(vidPath, g):
         fd.loadFrame(frame)
         faces = fd.detectFaces()
         eye = fd.detectEye()
-        profile = fd.detectProfileFaces()
+#        profile = fd.detectProfileFaces()
         
-        fc.addFaces(fd.extractFaces(faces, eye, profile))
+        fc.addFaces(fd.extractFaces(faces, eye))
         
         frame = vr.getNextFrame()
         g.progress()
@@ -109,5 +119,26 @@ def computeFunction(vidPath, g):
     
    
 if __name__ == "__main__":
-    gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
+#    gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
+#    gc = GenderClassifier.GenderClassifier()
+#    gc.initializeCNN()
+#    gc.fitCNN()
+
+#
+    filenames = glob.glob("../data/test/female/*.jpg")
+    filenames.sort()
+    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
+    
+    ci = ClassifyImage.ClassifyImage()
+    model = ci.loadModelandWeights("50epoch20batch_model")
+    results = []
+    for i in range(len(images)):
+        results.append(ci.classifyImage(model, images[i]))
+        
+    
+    print(results.count('female'))
+    
+    
+
 #%%
+

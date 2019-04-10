@@ -14,7 +14,7 @@ class FaceDetector():
         
     # Get an image of just the face from the frame 
     # Meant to be called in detect faces
-    def extractFaces(self, faces, eyes, profile):
+    def extractFaces(self, faces, eyes):
         visualFaces = []
         
         for (x,y,w,h) in faces:
@@ -23,8 +23,8 @@ class FaceDetector():
                     visualFaces.append(self.frame[y:y+h, x:x+w, :])
         
         
-        for (s,t,u,v) in profile:
-            visualFaces.append(self.frame[t:t+v, s:s+u, :])
+#        for (s,t,u,v) in profile:
+#            visualFaces.append(self.frame[t:t+v, s:s+u, :])
 
         return visualFaces
     
@@ -45,11 +45,11 @@ class FaceDetector():
         return sharingan
     
 #   not a redundant cascade, frontal does not capture the same objects as profil
-    def detectProfileFaces(self):
-        gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
-        profile = self.profileFace.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
-        
-        return profile
+#    def detectProfileFaces(self):
+#        gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
+#        profile = self.profileFace.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
+#        
+#        return profile
     
     def showFaces(self, faces):
         frame = self.frame
