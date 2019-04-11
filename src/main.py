@@ -124,7 +124,7 @@ if __name__ == "__main__":
 #    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
 #    
     ci = ClassifyImage.ClassifyImage()
-    ci.testingAccuracy('2epoch10batch_model', "../data/test/male/*.jpg",'female')
+#    ci.testingAccuracy('2epoch10batch_model', "../data/test/male/*.jpg",'female')
 #    model = ci.loadModelandWeights("50epoch20batch_model")
 #    results = []
 #    for i in range(len(images)):

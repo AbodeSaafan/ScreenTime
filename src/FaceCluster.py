@@ -3,7 +3,7 @@
 #https://www.pyimagesearch.com/2018/07/09/face-clustering-with-python/
 #https://github.com/cmusatyalab/openface
 import cv2
-from sklearn.cluster import DBSCAN
+from Dbscan import Dbscan
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -36,14 +36,15 @@ class FaceCluster():
         return self.faceVectors
     
     def startCluster(self):
-        self.cluster = DBSCAN(metric="euclidean", eps=.44).fit(self.faceVectors)
-        self.numOfClusters = max(self.cluster.labels_)
+        # Create instance of cluster and cluster the faces
+        self.cluster = Dbscan(.44, 3)
+        self.cluster.fit(self.faceVectors)
+        self.numOfClusters = max(self.cluster.labels)
         
     def showClusterResults(self):
         # Loop through each cluster
-        
         for c in range(-1, self.numOfClusters + 1):
-            matches = np.where(self.cluster.labels_ == c)[0]
+            matches = np.where(self.cluster.labels == c)[0]
             
             plt.figure()
             for i in range(len(matches)):
@@ -55,7 +56,7 @@ class FaceCluster():
     
     def getClusterImages(self, c):
         clusterPics = []
-        matches = np.where(self.cluster.labels_ == c)[0]
+        matches = np.where(self.cluster.labels == c)[0]
             
         plt.figure()
         for i in range(len(matches)):
@@ -66,11 +67,11 @@ class FaceCluster():
         clusterShare = []
         
         # All the positively identified faces
-        posFaces = len(np.where(self.cluster.labels_ != -1)[0])
+        posFaces = len(np.where(self.cluster.labels != -1)[0])
         
         # Loop through each cluster
-        for c in range(0, max(self.cluster.labels_) + 1):
-            matches = np.where(self.cluster.labels_ == c)[0]
+        for c in range(0, max(self.cluster.labels) + 1):
+            matches = np.where(self.cluster.labels == c)[0]
             
             clusterShare.append((float(len(matches))/posFaces)*100.0)
         return clusterShare

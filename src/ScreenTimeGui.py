@@ -1,7 +1,5 @@
-from Tkinter import Tk, Label, Button, Canvas, Scale, mainloop
+from tkinter import Tk, Label, Button, Canvas, Scale, mainloop, ttk, filedialog
 from PIL import Image, ImageTk
-from ttk import Progressbar
-import tkFileDialog
 from os import path
 from threading import Thread
 import numpy as np
@@ -34,7 +32,7 @@ class ScreenTimeGui:
         self.__browseButton.grid(row=0, column=1, padx=(10, 0))
         
         # Progress bar setup for later
-        self.__progBar = Progressbar(self.__master,
+        self.__progBar = ttk.Progressbar(self.__master,
                                    orient="horizontal",
                                    length=500,
                                    mode="determinate")
@@ -42,7 +40,7 @@ class ScreenTimeGui:
             
     def __selectFile(self):
         # Opening file
-        vidFile = tkFileDialog.askopenfile(parent=self.__master,
+        vidFile = filedialog.askopenfile(parent=self.__master,
                                              mode='rb',
                                              title='Select the video')
         if(vidFile != None):

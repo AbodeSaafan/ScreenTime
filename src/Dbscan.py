@@ -42,6 +42,8 @@ class Dbscan():
                 self.__expandCluster(points, pt, nbrs)
                 self.__cId += 1
                 
+        self.labels = np.array(self.labels)
+        
         return self.labels
 
     '''
