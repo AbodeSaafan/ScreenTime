@@ -10,7 +10,7 @@ class Dbscan():
     def __init__(self, eps, minSamples):
         self.__eps = eps
         self.__minSamples = minSamples
-        self.__clusters = [[]]
+        self.__clusters = []
         
     def calculateDistance(self, p1, p2):
         # Calculates the euclidean distance between 2 points
@@ -20,6 +20,7 @@ class Dbscan():
         # Takes in a set of points and begins clustering process
         
         unvisited = copy(points)
+        noise = []
         
         # While we have points still to visit
         while(unvisited != []):
@@ -28,29 +29,27 @@ class Dbscan():
             p = unvisited[rIndex]
             unvisited.pop(rIndex)
             
-            c = self.getNeighbourPoints(unvisited, p)    
+            cNbrsLen = len(self.getNeighbourPoints(unvisited, p)) + 1
             
-            # After forming the inital cluster, we check if it is valid 
-            if(len(c) < self.__minSamples):
+            # Check if we found a core, border or noise point
+            if(cNbrsLen == 0):
+                noise.append(p)
+            if(cNbrsLen < self.__minSamples):
                 # Not valid, p is a border point, move on
                 continue
-            elif(len(c) >= self.__minSamples):
+            elif(cNbrsLen >= self.__minSamples):
                 # p is a core point and the cluster is valid
                 # we need ot know the extent of the cluster DFS
+                newC = self.dfsCluster(copy(unvisited), p)
                 
-                # pop all points we have in current neighbourhood from unviisted
-                for i in range(1, len(c)):
-                    ind = np.where(unvisited == c[i])[0][0]
-                    print(ind)
-                    #ind = unvisited.index(c[i])
-                    unvisited.pop(ind)
-                # use that to get more points
-                # repeart 1 and 2 with those new points 
-                print('s')
+                #print(newC)
+#               
+                self.__clusters.append(newC)
+        return self.__clusters
             
     def getNeighbourPoints(self, allP, pCore):
         # Determine neighbours of pCore based on eps and minSamples
-        c = [pCore]
+        c = []
         for n in range(len(allP)):
             # Cluster starts with the core point
             dist = self.calculateDistance(pCore, allP[n])
@@ -59,4 +58,25 @@ class Dbscan():
             if(dist <= self.__eps):
                 c.append(allP[n])
         return c
+        
+    
+    
+    def dfsCluster(self, unvisited, pCore):
+        # Core should not be part of unvisited 
+        # Gets all the neighbours of a core point 
+        nbrs = self.getNeighbourPoints(unvisited, pCore)
+        
+        cluster = copy(nbrs)
+        
+        for i in range(len(nbrs)):
+            # Pop the neighbours from unvisited
+            ind = np.where(unvisited == nbrs[i])[0][0]
+            unvisited.pop(ind)
+        
+        
+        for i in range(len(nbrs)):
+            # Get cluster of neigbhour point and add it to cluster
+            cluster += self.dfsCluster(unvisited, nbrs[i])
+            
+        return cluster
         
