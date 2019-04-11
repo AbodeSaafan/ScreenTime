@@ -37,16 +37,15 @@ class ClassifyImage():
     def classifyCluster(self, clusterImages, ratio):
         # We pick n random images where n is based on ratio 
         n = int(len(clusterImages) * ratio)
-        randIndexes = sample(range(clusterImages) - 1, n)
+        randIndexes = sample(range(len(clusterImages) - 1), n)
 
         # Classify each random image
         results = []        
         for i in range(len(randIndexes)):
             randomImage = clusterImages[randIndexes[i]]
-            r = self.classifyImage(resize(randomImage, (250,250)))
-            results.append(r)
-        
-        print(r)
+            results.append(self.classifyImage(resize(randomImage, (250,250))))
+            
+        return round(sum(results)/len(results))
         
     def testingAccuracy(self, modelName, dataPath, gender='male'):
         filenames = glob.glob(dataPath)

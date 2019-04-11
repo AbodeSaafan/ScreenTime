@@ -57,13 +57,14 @@ def computeFunction(vidPath, g):
     g.fc = fc
     
     # Classify the clusters
-    gc =  ClassifyImage("5epoch10batch_model")
+    gc =  ClassifyImage("../lib/preTrained/50epoch20batch_model")
+    genderClusters = []
     
     for cId in range(fc.numOfClusters - 1):
         clusterImgs = np.array(fc.actualFaces)[np.where(fc.cluster.labels == cId)]
-        gc.classifyCluster(clusterImgs, 0.5)
+        genderClusters.append(gc.classifyCluster(clusterImgs, 0.5))
     
-    
+    g.genderClusters = genderClusters
     
     
     g.enableResultsButton()
@@ -77,25 +78,6 @@ def computeFunction(vidPath, g):
    
 if __name__ == "__main__":
     gui = ScreenTimeGui(computeFunction)
-#    gc = GenderClassifier.GenderClassifier()
-#    gc.initializeCNN()
-#    gc.fitCNN()
 
-#
-#    filenames = glob.glob("../data/test/female/*.jpg")
-#    filenames.sort()
-#    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
-#    
-#    ci = ClassifyImage()
-#    ci.testingAccuracy('2epoch10batch_model', "../data/test/male/*.jpg",'female')
-#    model = ci.loadModelandWeights("50epoch20batch_model")
-##    results = []
-#    for i in range(len(images)):
-#        results.append(ci.classifyImage(model, images[i]))
-#        
-#    
-#    print(results.count('female'))
-    
-    
 
 #%%

@@ -10,6 +10,7 @@ class ScreenTimeGui:
 
     def __init__(self, computeFunc):
         self.fc = FaceCluster()
+        self.genderClusters = []
         
         # Compute function that we will use later
         self.__compute = computeFunc
@@ -105,10 +106,15 @@ class ScreenTimeGui:
         
     def __forwardButtonPressed(self):
         # On cluster forward button press
-        if(self.__selectedClusterNum + 1 <= self.fc.numOfClusters):
+        if(self.__selectedClusterNum + 1 < self.fc.numOfClusters):
             self.__selectCluster(self.__selectedClusterNum + 1)
         
     def __selectCluster(self, c):
+        if(self.genderClusters[c] == 1):
+            print("PENIS")
+        else:
+            print("PROBABLY VAG")
+        
         # This selects the cluster c and updates some class vars
         self.__selectedClusterNum = c
         self.__clusterInfoText.config(text="Cluster " + str(c+1))
