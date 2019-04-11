@@ -1,11 +1,11 @@
 # Imports
 
 #TODO only import needed stuff
-import VideoReader
-import FaceDetector
-import FaceCluster
-import ScreenTimeGui
-import ClassifyImage
+from VideoReader import VideoReader
+from FaceDetector import FaceDetector
+from FaceCluster import FaceCluster
+from ScreenTimeGui import ScreenTimeGui
+from ClassifyImage import ClassifyImage
 import glob
 
 
@@ -113,7 +113,7 @@ def computeFunction(vidPath, g):
     
    
 if __name__ == "__main__":
-#    gui = ScreenTimeGui.ScreenTimeGui(computeFunction)
+    gui = ScreenTimeGui(computeFunction)
 #    gc = GenderClassifier.GenderClassifier()
 #    gc.initializeCNN()
 #    gc.fitCNN()
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 #    filenames.sort()
 #    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
 #    
-    ci = ClassifyImage.ClassifyImage()
+    ci = ClassifyImage()
 #    ci.testingAccuracy('2epoch10batch_model', "../data/test/male/*.jpg",'female')
 #    model = ci.loadModelandWeights("50epoch20batch_model")
 #    results = []

@@ -3,13 +3,13 @@ from PIL import Image, ImageTk
 from os import path
 from threading import Thread
 import numpy as np
-import FaceCluster
+from FaceCluster import FaceCluster
 
 class ScreenTimeGui:
     mainFont = ("Fixedsys", 18)
 
     def __init__(self, computeFunc):
-        self.fc = FaceCluster.FaceCluster()
+        self.fc = FaceCluster()
         
         # Compute function that we will use later
         self.__compute = computeFunc
