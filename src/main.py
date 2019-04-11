@@ -1,40 +1,10 @@
 # Imports
-
-#TODO only import needed stuff
 from VideoReader import VideoReader
 from FaceDetector import FaceDetector
 from FaceCluster import FaceCluster
 from ScreenTimeGui import ScreenTimeGui
 from ClassifyImage import ClassifyImage
-import glob
-
-
-
-
-
-## Skipping a minute in for testing
-#for i in range(42):
-#    vr.getNextFrame()
-#
-#fd.loadFrame(vr.getNextFrame())
-#
-#faces = fd.detectFaces()
-#
-#visFaces = fd.extractFaces(faces)
-#
-#fc.addFaces(visFaces)
-    
-# This displays it
-#plt.figure()
-#plt.axis('off')
-#plt.imshow(visFaces[0])
-#plt.show()
-#
-#plt.figure()
-#plt.imshow(fd.showFaces(faces))
-
-
-
+import numpy as np
 
 ## THIS CODE IS USED FOR TESTING FACE DETECTOR ##
 ## IT WILL OUTPUT A VIDEO WITH DETECTED FRAMES ##
@@ -56,32 +26,11 @@ import glob
 #out.release()
 
 ################################################
-
-
-#frame = vr.getNextFrame()
-#
-#while(len(frame) > 0 ):
-#    fd.loadFrame(frame)
-#    faces = fd.detectFaces()
-#    eye = fd.detectEye()
-#    profile = fd.detectProfileFaces()
-#    
-#    fc.addFaces(fd.extractFaces(faces, eye, profile))
-#    
-#    frame = vr.getNextFrame()
-#
-#fc.startCluster()
-##fc.showClusterResults()
-##x = fc.getScreenTimeShare()
-#c1 =  fc.getClusterImages(0)
-
-
-
 #%%
 def computeFunction(vidPath, g):   
-    vr = VideoReader.VideoReader(vidPath, sampleRate = 1)
-    fd = FaceDetector.FaceDetector()
-    fc = FaceCluster.FaceCluster()
+    vr = VideoReader(vidPath, sampleRate = 1)
+    fd = FaceDetector()
+    fc = FaceCluster()
 
     frame = vr.getNextFrame()
     
@@ -89,6 +38,7 @@ def computeFunction(vidPath, g):
     g.setProgressMax(vr.totalSample)
     
     while(len(frame) > 0):
+        # Face detection on each selected frame
         fd.loadFrame(frame)
         faces = fd.detectFaces()
         eye = fd.detectEye()
@@ -98,12 +48,25 @@ def computeFunction(vidPath, g):
         
         frame = vr.getNextFrame()
         g.progress()
-        
-    g.clusterState()
-    fc.startCluster()
     
+    # Switches GUI to processing cluster and classification state    
+    g.processingState()
+    
+    # Cluster faces
+    fc.startCluster()
     g.fc = fc
-    g.enableClusterButton()
+    
+    # Classify the clusters
+    gc =  ClassifyImage("5epoch10batch_model")
+    
+    for cId in range(fc.numOfClusters - 1):
+        clusterImgs = np.array(fc.actualFaces)[np.where(fc.cluster.labels == cId)]
+        gc.classifyCluster(clusterImgs, 0.5)
+    
+    
+    
+    
+    g.enableResultsButton()
     #g.showClusterResults(fc)
     
     #fc.showClusterResults()
@@ -123,10 +86,10 @@ if __name__ == "__main__":
 #    filenames.sort()
 #    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
 #    
-    ci = ClassifyImage()
+#    ci = ClassifyImage()
 #    ci.testingAccuracy('2epoch10batch_model', "../data/test/male/*.jpg",'female')
 #    model = ci.loadModelandWeights("50epoch20batch_model")
-#    results = []
+##    results = []
 #    for i in range(len(images)):
 #        results.append(ci.classifyImage(model, images[i]))
 #        
@@ -136,4 +99,3 @@ if __name__ == "__main__":
     
 
 #%%
-

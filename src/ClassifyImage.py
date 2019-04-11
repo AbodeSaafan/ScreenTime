@@ -2,38 +2,51 @@ from keras.preprocessing import image
 from keras.models import model_from_json
 import numpy as np
 import glob
+from random import sample
+from cv2 import resize
 
 
 class ClassifyImage():
     
-    def loadModelandWeights(self, modelName):
+    def __init__(self, modelName):
+        self.__modelName = modelName
+        self.__model = self.__loadModelandWeights()
+    
+    def __loadModelandWeights(self):
         # load json and create model
-        JSONfile = open(modelName+".json", "r")
+        JSONfile = open(self.__modelName+".json", "r")
         loadedModelJSON = JSONfile.read()
         JSONfile.close()
         loadedModel = model_from_json(loadedModelJSON)
         # load weights into new model
-        loadedModel.load_weights(modelName+".h5")
+        loadedModel.load_weights(self.__modelName+".h5")
         loadedModel.compile(optimizer='rmsprop',
                   loss='binary_crossentropy',
                   metrics=['accuracy'])
-        print("Loaded model from disk")
+        # Loaded model from disk
         return loadedModel
         
-    def classifyImage(self, model, img):
-    #        newImg = image.load_img(img, target_size = (250,250))
+    def classifyImage(self, img):
+        #TODO comments
         newImg = image.img_to_array(img)
         newImg = np.expand_dims(newImg, axis=0)
-        result = model.predict(newImg)
+        result = self.__model.predict(newImg)
+
+        return int(result[0][0])
+    
+    def classifyCluster(self, clusterImages, ratio):
+        # We pick n random images where n is based on ratio 
+        n = int(len(clusterImages) * ratio)
+        randIndexes = sample(range(clusterImages) - 1, n)
+
+        # Classify each random image
+        results = []        
+        for i in range(len(randIndexes)):
+            randomImage = clusterImages[randIndexes[i]]
+            r = self.classifyImage(resize(randomImage, (250,250)))
+            results.append(r)
         
-#        test = self.model.predict(img)
-#            print(result)
-    #        classification = self.train_generator.class_indices
-    #        print(classification)
-        
-        if result[0][0] == 1.:
-            return('male')
-        else: return('female')
+        print(r)
         
     def testingAccuracy(self, modelName, dataPath, gender='male'):
         filenames = glob.glob(dataPath)

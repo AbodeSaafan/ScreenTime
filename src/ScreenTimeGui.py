@@ -16,6 +16,7 @@ class ScreenTimeGui:
         
         # Master window
         self.__master = Tk()
+        self.__master.resizable(False, False)
         self.__master.title("ScreenTime")
         
         # Text for user instructions 
@@ -74,9 +75,10 @@ class ScreenTimeGui:
                                        % (newVal,self.__progBar["maximum"]))
         self.__progBar.step()
         
-    def clusterState(self):
-        # Changes the GUI to show that clustering is being processed
-        self.__instructionsText.config(text="Clustering the faces ...")
+    def processingState(self):
+        # Changes the GUI to show that clustering and classification 
+        # is being processed
+        self.__instructionsText.config(text="Clustering and classifying faces ...")
         self.__progBar.config(mode="indeterminate")
         self.__progBar.start()
         
@@ -85,7 +87,7 @@ class ScreenTimeGui:
                                    font=ScreenTimeGui.mainFont,
                                    text="Show results")
         
-    def enableClusterButton(self):
+    def enableResultsButton(self):
         # Make progress bar full and stop it
         self.__progBar.stop()
         self.__progBar.config(mode="determinate")
