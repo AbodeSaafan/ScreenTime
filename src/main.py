@@ -118,38 +118,22 @@ if __name__ == "__main__":
    
     frame = vr.getNextFrame()   
     
-#    i = 0
-#    while(len(frame) > 0 and i < 10):
-#        i+= 1
-#        fd.loadFrame(frame)
-#        faces = fd.detectFaces()
-#        eye = fd.detectEye()
-#        profile = fd.detectProfileFaces()
-#        
-#        fc.addFaces(fd.extractFaces(faces, eye, profile))
-#        
-#        frame = vr.getNextFrame()
+    i = 0
+    while(len(frame) > 0 and i < 10):
+        i+= 1
+        fd.loadFrame(frame)
+        faces = fd.detectFaces()
+        eye = fd.detectEye()
+        profile = fd.detectProfileFaces()
         
-    #db.fit(fc.faceVectors)
-    import numpy as np
-    testVecs = [np.array([1,5]),
-                np.array([5,5]),
-                np.array([6,7]),
-                np.array([1,1]),
-                np.array([10,3]),
-                np.array([3,3]),
-                np.array([0,4]),
-                np.array([2,8]),
-                np.array([1,9]),
-                np.array([6,5]),
-                np.array([8,7]),
-                np.array([7,7])
-           ] 
+        fc.addFaces(fd.extractFaces(faces, eye, profile))
+        
+        frame = vr.getNextFrame()
+     
     from sklearn.cluster import DBSCAN
-    clu = DBSCAN(metric="euclidean", eps=2, min_samples=2).fit(testVecs)
+    db = Dbscan.Dbscan(.5, 2)        
+    print(db.fit(fc.faceVectors))
+    clu = DBSCAN(metric="euclidean", eps=.5, min_samples=2).fit(fc.faceVectors)
     print(clu.labels_)
-    print(np.array(testVecs)[np.where(clu.labels_ == 1)])
-    db = Dbscan.Dbscan(2, 2)
-    
-    clusters = db.fit(testVecs)
+
 #%%
