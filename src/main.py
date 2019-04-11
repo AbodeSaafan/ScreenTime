@@ -5,14 +5,8 @@ import VideoReader
 import FaceDetector
 import FaceCluster
 import ScreenTimeGui
-import GenderClassifier
 import ClassifyImage
-import cv2
 import glob
-import matplotlib.pyplot as plt
-from PIL import Image
-import glob
-from keras.preprocessing import image
 
 
 
@@ -130,7 +124,7 @@ if __name__ == "__main__":
 #    images = [image.load_img(img, target_size = (250,250)) for img in filenames]
 #    
     ci = ClassifyImage.ClassifyImage()
-    ci.testingAccuracy('10epoch20batch_model', "../data/test/male/*.jpg", )
+    ci.testingAccuracy('2epoch10batch_model', "../data/test/male/*.jpg",'female')
 #    model = ci.loadModelandWeights("50epoch20batch_model")
 #    results = []
 #    for i in range(len(images)):

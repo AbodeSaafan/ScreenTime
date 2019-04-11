@@ -13,8 +13,8 @@ train_data_dir = '../data/train'
 validation_data_dir = '../data/validation'
 nb_train_samples = 364
 nb_validation_samples = 52
-epochs = 10
-batch_size = 20
+epochs = 2
+batch_size = 10
 if K.image_data_format() == 'channels_first':
     input_shape = (3, img_width, img_height)
 else:
@@ -81,12 +81,12 @@ model.fit_generator(
 
 # serialize model to JSON
 modelJSON = model.to_json()
-    with open("10epoch20batch_model.json", "w") as jsonfile:
+with open("2epoch10batch_model.json", "w") as jsonfile:
     jsonfile.write(modelJSON)
 # serialize weights to HDF5
-model.save_weights("10epoch20batch_model.h5")
-with open("10epoch20batch_model.txt", "w") as textfile:
-    textfile.write('10epoch20batch_model')
+model.save_weights("2epoch10batch_model.h5")
+with open("2epoch10batch_model.txt", "w") as textfile:
+    textfile.write('2epoch10batch_model')
 print("Saved model to disk")
     
 

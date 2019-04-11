@@ -47,6 +47,6 @@ class ClassifyImage():
             results.append(self.classifyImage(model, images[i]))
             
         
-        print('{} out of {}'.format(results.count('male'), len(filenames)))
+        print('{} out of {}'.format(results.count(gender), len(filenames)))
 
         
