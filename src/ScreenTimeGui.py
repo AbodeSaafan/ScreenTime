@@ -10,9 +10,12 @@ class ScreenTimeGui:
     subFont = ("Fixedsys", 14)
 
     def __init__(self, computeFunc):
+        # Initalizing vars
         self.fc = FaceCluster()
         self.genderClusters = []
         self.clusterShares = []
+        self.maleGenderShare = 0
+        self.femaleGenderShare = 0
         
         # Compute function that we will use later
         self.__compute = computeFunc
@@ -197,14 +200,24 @@ class ScreenTimeGui:
         maleSplit = sum(self.genderClusters)/(len(self.genderClusters))
         self.__genderSplit = Label(self.__master,
                                    font=ScreenTimeGui.subFont,
-                                   text="~~Actor ratio~~\nMale: {:.0%}\nFemale: {:.0%}".format(maleSplit, 1.0-maleSplit))
+                                   borderwidth=2,
+                                   relief="groove",
+                                   text="~~Actor ratio~~\nMale: {:.0%}\nFemale: {:.0%}".format(
+                                   maleSplit,
+                                   1.0-maleSplit))
         
         self.__genderSplit.grid(row=5, column=1, padx=(60,60))
         
         self.__genderScreentime = Label(self.__master,
                                         font=ScreenTimeGui.subFont,
-                                        text="")
+                                        borderwidth=2,
+                                        relief="groove",
+                                        text=
+                                        "~~Gender screentime~~\nMale: {:.0%}\nFemale: {:.0%}".format(
+                                            self.maleGenderShare,
+                                            self.femaleGenderShare))
         self.__genderScreentime.grid(row=6, column=1, padx=(60,60))
+        
         
         # Select first cluster and image to initalize UI
         self.__selectCluster(0)
