@@ -26,10 +26,13 @@ class ClassifyImage():
         # Loaded model from disk
         return loadedModel
         
+    # classifying a given image with the trained model 
     def classifyImage(self, img):
-        #TODO comments
+        # extract the features of the image
         newImg = image.img_to_array(img)
         newImg = np.expand_dims(newImg, axis=0)
+        # predict the image's classification, outputs predictions for the input 
+        # samples
         result = self.__model.predict(newImg)
 
         return int(result[0][0])
