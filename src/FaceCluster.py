@@ -24,7 +24,7 @@ class FaceCluster():
             # Creating a blob to pass into the network
             # TODO read more about this though 
             faceBlob = cv2.dnn.blobFromImage(cv2.resize(face, (96,96)), 
-                                             1.0/100, # Scale factor
+                                             1.0/255, # Scale factor
                                              (96, 96)) # Spatial size
 
             self.embedder.setInput(faceBlob)
@@ -37,7 +37,7 @@ class FaceCluster():
     
     def startCluster(self):
         # Create instance of cluster and cluster the faces
-        self.cluster = Dbscan(.44, 3)
+        self.cluster = Dbscan(.4, 5)
         self.cluster.fit(self.faceVectors)
         self.numOfClusters = max(self.cluster.labels)
         
@@ -73,5 +73,5 @@ class FaceCluster():
         for c in range(0, max(self.cluster.labels) + 1):
             matches = np.where(self.cluster.labels == c)[0]
             
-            clusterShare.append((float(len(matches))/posFaces)*100.0)
+            clusterShare.append(float(len(matches))/posFaces)
         return clusterShare

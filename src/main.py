@@ -28,7 +28,7 @@ import numpy as np
 ################################################
 #%%
 def computeFunction(vidPath, g):   
-    vr = VideoReader(vidPath, sampleRate = 1)
+    vr = VideoReader(vidPath, sampleRate = 5)
     fd = FaceDetector()
     fc = FaceCluster()
 
@@ -56,6 +56,9 @@ def computeFunction(vidPath, g):
     fc.startCluster()
     g.fc = fc
     
+    # Screentime % of each person/cluster
+    g.clusterShares = fc.getScreenTimeShare()
+
     # Classify the clusters
     gc =  ClassifyImage("../lib/preTrained/50epoch20batch_model")
     genderClusters = []
@@ -66,16 +69,9 @@ def computeFunction(vidPath, g):
     
     g.genderClusters = genderClusters
     
-    
     g.enableResultsButton()
-    #g.showClusterResults(fc)
     
-    #fc.showClusterResults()
-    
-    #x = fc.getScreenTimeShare()
-#    fc.getClusterImages(0)
-    
-   
+
 if __name__ == "__main__":
     gui = ScreenTimeGui(computeFunction)
 

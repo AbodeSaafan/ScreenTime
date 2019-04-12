@@ -7,10 +7,12 @@ from FaceCluster import FaceCluster
 
 class ScreenTimeGui:
     mainFont = ("Fixedsys", 18)
+    subFont = ("Fixedsys", 14)
 
     def __init__(self, computeFunc):
         self.fc = FaceCluster()
         self.genderClusters = []
+        self.clusterShares = []
         
         # Compute function that we will use later
         self.__compute = computeFunc
@@ -106,14 +108,20 @@ class ScreenTimeGui:
         
     def __forwardButtonPressed(self):
         # On cluster forward button press
-        if(self.__selectedClusterNum + 1 < self.fc.numOfClusters):
+        if(self.__selectedClusterNum + 2 < self.fc.numOfClusters):
             self.__selectCluster(self.__selectedClusterNum + 1)
         
     def __selectCluster(self, c):
         if(self.genderClusters[c] == 1):
-            print("PENIS")
+            genderText = "Predicted gender: Male" 
         else:
-            print("PROBABLY VAG")
+            genderText = "Predicted gender: Female" 
+        self.clusterShares
+        
+        percent = self.clusterShares[c]
+        percentText = "Person's screentime percentage:  {:.2%}\n".format(percent)
+        
+        self.__infoText.config(text = percentText + genderText)
         
         # This selects the cluster c and updates some class vars
         self.__selectedClusterNum = c
@@ -178,6 +186,14 @@ class ScreenTimeGui:
                                            command=self.__showClusterImage)
         self.__clusterImagesSlider.grid(row=3, column=1, padx=(80,80))
         
+        # UI elements for the data for each cluster (share and gender)
+        self.__infoText = Label(self.__master,
+                                font=ScreenTimeGui.subFont,
+                                text="")
+        self.__infoText.grid(row=4, column=1, padx=(60,60))
+        
         # Select first cluster and image to initalize UI
         self.__selectCluster(0)
         self.__showClusterImage(1)
+        
+       
