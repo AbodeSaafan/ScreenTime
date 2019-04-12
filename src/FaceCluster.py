@@ -39,7 +39,7 @@ class FaceCluster():
         # Create instance of cluster and cluster the faces
         self.cluster = Dbscan(.4, 5)
         self.cluster.fit(self.faceVectors)
-        self.numOfClusters = max(self.cluster.labels)
+        self.numOfClusters = max(self.cluster.labels) + 1
         
     def showClusterResults(self):
         # Loop through each cluster
@@ -70,7 +70,7 @@ class FaceCluster():
         posFaces = len(np.where(self.cluster.labels != -1)[0])
         
         # Loop through each cluster
-        for c in range(0, max(self.cluster.labels) + 1):
+        for c in range(0, self.numOfClusters):
             matches = np.where(self.cluster.labels == c)[0]
             
             clusterShare.append(float(len(matches))/posFaces)

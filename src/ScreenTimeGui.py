@@ -40,6 +40,7 @@ class ScreenTimeGui:
                                    orient="horizontal",
                                    length=500,
                                    mode="determinate")
+        
         mainloop()
             
     def __selectFile(self):
@@ -108,7 +109,7 @@ class ScreenTimeGui:
         
     def __forwardButtonPressed(self):
         # On cluster forward button press
-        if(self.__selectedClusterNum + 2 < self.fc.numOfClusters):
+        if(self.__selectedClusterNum + 1 < self.fc.numOfClusters):
             self.__selectCluster(self.__selectedClusterNum + 1)
         
     def __selectCluster(self, c):
@@ -191,6 +192,19 @@ class ScreenTimeGui:
                                 font=ScreenTimeGui.subFont,
                                 text="")
         self.__infoText.grid(row=4, column=1, padx=(60,60))
+        
+        # The info display for the entire program (gender)
+        maleSplit = sum(self.genderClusters)/(len(self.genderClusters))
+        self.__genderSplit = Label(self.__master,
+                                   font=ScreenTimeGui.subFont,
+                                   text="~~Actor ratio~~\nMale: {:.0%}\nFemale: {:.0%}".format(maleSplit, 1.0-maleSplit))
+        
+        self.__genderSplit.grid(row=5, column=1, padx=(60,60))
+        
+        self.__genderScreentime = Label(self.__master,
+                                        font=ScreenTimeGui.subFont,
+                                        text="")
+        self.__genderScreentime.grid(row=6, column=1, padx=(60,60))
         
         # Select first cluster and image to initalize UI
         self.__selectCluster(0)

@@ -63,7 +63,7 @@ def computeFunction(vidPath, g):
     gc =  ClassifyImage("../lib/preTrained/50epoch20batch_model")
     genderClusters = []
     
-    for cId in range(fc.numOfClusters - 1):
+    for cId in range(fc.numOfClusters):
         clusterImgs = np.array(fc.actualFaces)[np.where(fc.cluster.labels == cId)]
         genderClusters.append(gc.classifyCluster(clusterImgs, 0.5))
     
