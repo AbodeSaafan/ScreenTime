@@ -7,10 +7,15 @@ from FaceCluster import FaceCluster
 
 class ScreenTimeGui:
     mainFont = ("Fixedsys", 18)
+    subFont = ("Fixedsys", 14)
 
     def __init__(self, computeFunc):
+        # Initalizing vars
         self.fc = FaceCluster()
         self.genderClusters = []
+        self.clusterShares = []
+        self.maleGenderShare = 0
+        self.femaleGenderShare = 0
         
         # Compute function that we will use later
         self.__compute = computeFunc
@@ -38,6 +43,7 @@ class ScreenTimeGui:
                                    orient="horizontal",
                                    length=500,
                                    mode="determinate")
+        
         mainloop()
             
     def __selectFile(self):
@@ -111,9 +117,14 @@ class ScreenTimeGui:
         
     def __selectCluster(self, c):
         if(self.genderClusters[c] == 1):
-            print("PENIS")
+            genderText = "Predicted gender: Male" 
         else:
-            print("PROBABLY VAG")
+            genderText = "Predicted gender: Female" 
+        
+        percent = self.clusterShares[c]
+        percentText = "Person's screentime percentage:  {:.2%}\n".format(percent)
+        
+        self.__infoText.config(text = percentText + genderText)
         
         # This selects the cluster c and updates some class vars
         self.__selectedClusterNum = c
@@ -150,19 +161,19 @@ class ScreenTimeGui:
         self.__clusterInfoText = Label(self.__master,
                                        font=ScreenTimeGui.mainFont,
                                        text="Cluster 1")
-        self.__clusterInfoText.grid(row=0, column=1, padx=(20,20))
+        self.__clusterInfoText.grid(row=0, column=2, padx=(20,20))
         
         self.__forwardClusterButton = Button(self.__master,
                                              command=self.__forwardButtonPressed,
                                              font=ScreenTimeGui.mainFont,
                                              text=">")
-        self.__forwardClusterButton.grid(row=0, column=2, padx=(60, 0))
+        self.__forwardClusterButton.grid(row=0, column=4, padx=(60, 0))
         
         # Pictures in cluster with slider
         self.__clusterImageCanvas = Canvas(self.__master,
                                            width=200,
                                            height=200)
-        self.__clusterImageCanvas.grid(row=2, column=1)
+        self.__clusterImageCanvas.grid(row=2, column=2)
         
         img = ImageTk.PhotoImage(master = self.__master, 
                                  image=Image.fromarray(np.zeros((20,20))))
@@ -176,7 +187,36 @@ class ScreenTimeGui:
                                            to=1,
                                            orient="horizontal",
                                            command=self.__showClusterImage)
-        self.__clusterImagesSlider.grid(row=3, column=1, padx=(80,80))
+        self.__clusterImagesSlider.grid(row=3, column=2, padx=(80,80))
+        
+        # UI elements for the data for each cluster (share and gender)
+        self.__infoText = Label(self.__master,
+                                font=ScreenTimeGui.subFont,
+                                text="")
+        self.__infoText.grid(row=4, column=2, padx=(60,60))
+        
+        # The info display for the entire program (gender)
+        maleSplit = sum(self.genderClusters)/(len(self.genderClusters))
+        self.__genderSplit = Label(self.__master,
+                                   font=ScreenTimeGui.subFont,
+                                   borderwidth=2,
+                                   relief="groove",
+                                   text="Actor ratio\nMale: {:.0%}\nFemale: {:.0%}".format(
+                                   maleSplit,
+                                   1.0-maleSplit))
+        
+        self.__genderSplit.grid(row=5, column=1, padx=(60,60))
+        
+        self.__genderScreentime = Label(self.__master,
+                                        font=ScreenTimeGui.subFont,
+                                        borderwidth=2,
+                                        relief="groove",
+                                        text=
+                                        "Gender screentime\nMale: {:.0%}\nFemale: {:.0%}".format(
+                                            self.maleGenderShare,
+                                            self.femaleGenderShare))
+        self.__genderScreentime.grid(row=5, column=3, padx=(60,60))
+        
         
         # Select first cluster and image to initalize UI
         self.__selectCluster(0)

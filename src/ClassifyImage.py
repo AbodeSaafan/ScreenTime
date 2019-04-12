@@ -47,7 +47,7 @@ class ClassifyImage():
         for i in range(len(randIndexes)):
             randomImage = clusterImages[randIndexes[i]]
             results.append(self.classifyImage(resize(randomImage, (250,250))))
-            
+        # We get average of all results and round it (down or up) to a gender
         return round(sum(results)/len(results))
         
     def testingAccuracy(self, modelName, dataPath, gender='male'):

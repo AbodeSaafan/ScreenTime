@@ -4,7 +4,6 @@
 #https://github.com/cmusatyalab/openface
 import cv2
 from Dbscan import Dbscan
-import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -22,9 +21,8 @@ class FaceCluster():
         # Add to cluster
         for face in faces:
             # Creating a blob to pass into the network
-            # TODO read more about this though 
             faceBlob = cv2.dnn.blobFromImage(cv2.resize(face, (96,96)), 
-                                             1.0/100, # Scale factor
+                                             1.0/255, # Scale factor
                                              (96, 96)) # Spatial size
 
             self.embedder.setInput(faceBlob)
@@ -37,28 +35,14 @@ class FaceCluster():
     
     def startCluster(self):
         # Create instance of cluster and cluster the faces
-        self.cluster = Dbscan(.44, 3)
+        self.cluster = Dbscan(.4, 5)
         self.cluster.fit(self.faceVectors)
-        self.numOfClusters = max(self.cluster.labels)
-        
-    def showClusterResults(self):
-        # Loop through each cluster
-        for c in range(-1, self.numOfClusters + 1):
-            matches = np.where(self.cluster.labels == c)[0]
-            
-            plt.figure()
-            for i in range(len(matches)):
-                if(i > 24):
-                    break
-                plt.subplot(5,5, i+1)
-                plt.axis('off')
-                plt.imshow(cv2.cvtColor(self.actualFaces[matches[i]], cv2.COLOR_BGR2RGB))
-    
+        self.numOfClusters = max(self.cluster.labels) + 1
+
     def getClusterImages(self, c):
         clusterPics = []
         matches = np.where(self.cluster.labels == c)[0]
             
-        plt.figure()
         for i in range(len(matches)):
             clusterPics.append(cv2.cvtColor(self.actualFaces[matches[i]], cv2.COLOR_BGR2RGB))
         return clusterPics
@@ -70,8 +54,8 @@ class FaceCluster():
         posFaces = len(np.where(self.cluster.labels != -1)[0])
         
         # Loop through each cluster
-        for c in range(0, max(self.cluster.labels) + 1):
+        for c in range(0, self.numOfClusters):
             matches = np.where(self.cluster.labels == c)[0]
             
-            clusterShare.append((float(len(matches))/posFaces)*100.0)
+            clusterShare.append(float(len(matches))/posFaces)
         return clusterShare
