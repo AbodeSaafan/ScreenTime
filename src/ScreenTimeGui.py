@@ -120,7 +120,6 @@ class ScreenTimeGui:
             genderText = "Predicted gender: Male" 
         else:
             genderText = "Predicted gender: Female" 
-        self.clusterShares
         
         percent = self.clusterShares[c]
         percentText = "Person's screentime percentage:  {:.2%}\n".format(percent)
@@ -162,19 +161,19 @@ class ScreenTimeGui:
         self.__clusterInfoText = Label(self.__master,
                                        font=ScreenTimeGui.mainFont,
                                        text="Cluster 1")
-        self.__clusterInfoText.grid(row=0, column=1, padx=(20,20))
+        self.__clusterInfoText.grid(row=0, column=2, padx=(20,20))
         
         self.__forwardClusterButton = Button(self.__master,
                                              command=self.__forwardButtonPressed,
                                              font=ScreenTimeGui.mainFont,
                                              text=">")
-        self.__forwardClusterButton.grid(row=0, column=2, padx=(60, 0))
+        self.__forwardClusterButton.grid(row=0, column=4, padx=(60, 0))
         
         # Pictures in cluster with slider
         self.__clusterImageCanvas = Canvas(self.__master,
                                            width=200,
                                            height=200)
-        self.__clusterImageCanvas.grid(row=2, column=1)
+        self.__clusterImageCanvas.grid(row=2, column=2)
         
         img = ImageTk.PhotoImage(master = self.__master, 
                                  image=Image.fromarray(np.zeros((20,20))))
@@ -188,13 +187,13 @@ class ScreenTimeGui:
                                            to=1,
                                            orient="horizontal",
                                            command=self.__showClusterImage)
-        self.__clusterImagesSlider.grid(row=3, column=1, padx=(80,80))
+        self.__clusterImagesSlider.grid(row=3, column=2, padx=(80,80))
         
         # UI elements for the data for each cluster (share and gender)
         self.__infoText = Label(self.__master,
                                 font=ScreenTimeGui.subFont,
                                 text="")
-        self.__infoText.grid(row=4, column=1, padx=(60,60))
+        self.__infoText.grid(row=4, column=2, padx=(60,60))
         
         # The info display for the entire program (gender)
         maleSplit = sum(self.genderClusters)/(len(self.genderClusters))
@@ -202,7 +201,7 @@ class ScreenTimeGui:
                                    font=ScreenTimeGui.subFont,
                                    borderwidth=2,
                                    relief="groove",
-                                   text="~~Actor ratio~~\nMale: {:.0%}\nFemale: {:.0%}".format(
+                                   text="Actor ratio\nMale: {:.0%}\nFemale: {:.0%}".format(
                                    maleSplit,
                                    1.0-maleSplit))
         
@@ -213,14 +212,12 @@ class ScreenTimeGui:
                                         borderwidth=2,
                                         relief="groove",
                                         text=
-                                        "~~Gender screentime~~\nMale: {:.0%}\nFemale: {:.0%}".format(
+                                        "Gender screentime\nMale: {:.0%}\nFemale: {:.0%}".format(
                                             self.maleGenderShare,
                                             self.femaleGenderShare))
-        self.__genderScreentime.grid(row=6, column=1, padx=(60,60))
+        self.__genderScreentime.grid(row=5, column=3, padx=(60,60))
         
         
         # Select first cluster and image to initalize UI
         self.__selectCluster(0)
         self.__showClusterImage(1)
-        
-       

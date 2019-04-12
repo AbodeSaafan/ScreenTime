@@ -70,7 +70,7 @@ def computeFunction(vidPath, g):
     g.genderClusters = genderClusters
     
     # Since male = 1 and female = 0 we can do a dot product to get screentime by
-    # gender. 
+    # gender
     g.maleGenderShare = np.dot(np.array(genderClusters), np.array(g.clusterShares))
     g.femaleGenderShare = 1 - g.maleGenderShare
     
