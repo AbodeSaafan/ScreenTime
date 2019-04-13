@@ -9,9 +9,11 @@ class ScreenTimeGui:
     mainFont = ("Fixedsys", 18)
     subFont = ("Fixedsys", 14)
 
-    def __init__(self, computeFunc):
+    def __init__(self, computeFunc, args):
         # Initalizing vars
-        self.fc = FaceCluster()
+        self.args = args
+        # Temp init for FC so that IDE autocomplete works better
+        self.fc = FaceCluster(0, 0, 0)
         self.genderClusters = []
         self.clusterShares = []
         self.maleGenderShare = 0

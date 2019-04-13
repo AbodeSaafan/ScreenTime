@@ -11,18 +11,22 @@ import numpy as np
 This class is used to create the cluster of faces 
 '''
 class FaceCluster():
-    def __init__(self):
+    def __init__(self, scaleFactor, eps, minSamples):
         # Do stuff here like init vars we need
         self.embedder = cv2.dnn.readNetFromTorch("../lib/nn4.small2.v1.t7")
         self.faceVectors = []
         self.actualFaces = []
+        
+        self.scaleFactor = scaleFactor
+        self.eps = eps
+        self.minSamples = minSamples
         
     def addFaces(self, faces):
         # Add to cluster
         for face in faces:
             # Creating a blob to pass into the network
             faceBlob = cv2.dnn.blobFromImage(cv2.resize(face, (96,96)), 
-                                             1.0/255, # Scale factor
+                                             self.scaleFactor, # Scale factor
                                              (96, 96)) # Spatial size
 
             self.embedder.setInput(faceBlob)
@@ -35,7 +39,7 @@ class FaceCluster():
     
     def startCluster(self):
         # Create instance of cluster and cluster the faces
-        self.cluster = Dbscan(.4, 5)
+        self.cluster = Dbscan(self.eps, self.minSamples)
         self.cluster.fit(self.faceVectors)
         self.numOfClusters = max(self.cluster.labels) + 1
 

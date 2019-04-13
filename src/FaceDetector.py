@@ -1,10 +1,11 @@
 import cv2
 
 class FaceDetector():
-    def __init__(self):
+    def __init__(self, minN):
+        self.minN = minN
         
-#        cascades are classifiers to detect facial features
-#        can train a custom cascade or use cv2's
+        #cascades are classifiers to detect facial features
+        #can train a custom cascade or use cv2's
         self.faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.rightEye =  cv2.CascadeClassifier('haarcascade_righteye_2splits.xml')
         self.profileFace =  cv2.CascadeClassifier('haarcascade_profileface.xml')
@@ -32,7 +33,9 @@ class FaceDetector():
     def detectFaces(self):
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
 #        optimal params for the friends clip
-        faces = self.faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors= 4)
+        faces = self.faceCascade.detectMultiScale(gray,
+                                                  scaleFactor=1.1,
+                                                  minNeighbors= self.minN)
         
         return faces
     

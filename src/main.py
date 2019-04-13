@@ -1,36 +1,22 @@
-# Imports
 from VideoReader import VideoReader
 from FaceDetector import FaceDetector
 from FaceCluster import FaceCluster
 from ScreenTimeGui import ScreenTimeGui
 from ClassifyImage import ClassifyImage
 import numpy as np
+import argparse
 
-## THIS CODE IS USED FOR TESTING FACE DETECTOR ##
-## IT WILL OUTPUT A VIDEO WITH DETECTED FRAMES ##
 
-## KEEP THE FILE NAME THE SAME SO THAT IT IS GIT IGNORED ##
-#out = cv2.VideoWriter('test_temp.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 5, (1280,720))
-#
-#frame = vr.getNextFrame()
-#
-#while(len(frame) > 0 ):
-#    fd.loadFrame(frame)
-#    faces = fd.detectFaces()
-#    newFrame = fd.showFaces(faces)
-#    
-#    out.write(newFrame)
-#    
-#    frame = vr.getNextFrame()
-#
-#out.release()
-
-################################################
-#%%
+'''
+This compute function is passed into the GUI class and is called when a 
+user selects a video
+'''
 def computeFunction(vidPath, g):   
-    vr = VideoReader(vidPath, sampleRate = 5)
-    fd = FaceDetector()
-    fc = FaceCluster()
+    vr = VideoReader(vidPath, sampleRate = g.args.sampleRate)
+    fd = FaceDetector(g.args.faceDetectionMinN)
+    fc = FaceCluster(g.args.faceVectorScale, 
+                     g.args.clusterEpsi,
+                     g.args.clusterMinSamples)
 
     frame = vr.getNextFrame()
     
@@ -42,7 +28,7 @@ def computeFunction(vidPath, g):
         fd.loadFrame(frame)
         faces = fd.detectFaces()
         eye = fd.detectEye()
-#        profile = fd.detectProfileFaces()
+        #profile = fd.detectProfileFaces() Used for detecting profile faces
         
         fc.addFaces(fd.extractFaces(faces, eye))
         
@@ -59,7 +45,7 @@ def computeFunction(vidPath, g):
     # Screentime % of each person/cluster
     g.clusterShares = fc.getScreenTimeShare()
 
-    # Classify the clusters
+    # Classify the clusters one at a time
     gc =  ClassifyImage("../lib/preTrained/50epoch20batch_model")
     genderClusters = []
     
@@ -77,8 +63,61 @@ def computeFunction(vidPath, g):
     g.enableResultsButton()
     
 
+'''
+This function takes care of the arguments based on the command line to launch
+the program. They are not super user-friendly since they are meant to be 
+changed by an admin/dev only. Refer to report.
+'''
+def processArguments():
+    # Processing arguments for the program
+    parser = argparse.ArgumentParser(description="ScreenTime application")
+    
+    # Since we don't know the frame rate of the video we have a loose restriction
+    # on the frame rate. But it should atleast be 1 or above    
+    parser.add_argument("--sampleRate",
+                        metavar="1 <= sampleRate <= video frame rate",
+                        type=int,
+                        nargs="?",
+                        default=5,
+                        choices=range(1, 200),
+                        help="How often per second we sample the video")
+    
+    # 60000 is just so that we only have a lower limit, ideally these arguments
+    # will never get up that high
+    parser.add_argument("--clusterMinSamples",
+                        metavar="1 <= clusterMinSamples",
+                        type=int,
+                        nargs="?",
+                        default=5,
+                        choices=range(1, 60000),
+                        help="MinSamples argument for DBSCAN clustering")
+        
+    parser.add_argument("--faceDetectionMinN",
+                        metavar="1 <= faceDetectionMinN",
+                        type=int,
+                        nargs="?",
+                        default=4,
+                        choices=range(1, 60000),
+                        help="Min neighbours for face detection")
+    
+    parser.add_argument("--clusterEpsi",
+                        metavar="0 <= clusterEpsi",
+                        type=float,
+                        nargs="?",
+                        default=0.4,
+                        help="Epsilon argument for DBSCAN clustering")
+    
+    parser.add_argument("--faceVectorScale",
+                        metavar="0 < faceVectorScale <= 1",
+                        type=float,
+                        nargs="?",
+                        default=1.0/255,
+                        help="Scale argument for vector conversion")
+    
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    gui = ScreenTimeGui(computeFunction)
-
-
-#%%
+    args = processArguments()
+    
+    gui = ScreenTimeGui(computeFunction, args)
