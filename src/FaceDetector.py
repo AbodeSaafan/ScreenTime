@@ -1,5 +1,10 @@
 import cv2
 
+
+'''
+This class interfaces with the video file and keeps track of
+which frames we want to grab based on sample rate and frame rate
+'''
 class FaceDetector():
     def __init__(self, minN):
         self.minN = minN
@@ -8,13 +13,14 @@ class FaceDetector():
         #can train a custom cascade or use cv2's
         self.faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.rightEye =  cv2.CascadeClassifier('haarcascade_righteye_2splits.xml')
-        self.profileFace =  cv2.CascadeClassifier('haarcascade_profileface.xml')
 
     def loadFrame(self, frame):
         self.frame = frame
         
-    # Get an image of just the face from the frame 
-    # Meant to be called in detect faces
+    ''' 
+    Get an image of just the face from the frame.
+    Meant to be called in detect faces
+    '''
     def extractFaces(self, faces, eyes):
         visualFaces = []
         
@@ -23,36 +29,26 @@ class FaceDetector():
                 if (a > x and b > y and a+c < x+w and b+d < y+h):
                     visualFaces.append(self.frame[y:y+h, x:x+w, :])
         
-        
-#        for (s,t,u,v) in profile:
-#            visualFaces.append(self.frame[t:t+v, s:s+u, :])
 
         return visualFaces
     
     
     def detectFaces(self):
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
-#        optimal params for the friends clip
+        # optimal parameters for video clips
         faces = self.faceCascade.detectMultiScale(gray,
                                                   scaleFactor=1.1,
                                                   minNeighbors= self.minN)
         
         return faces
     
-#   might keep profile face detection instead of this, but this eliminates noise for some cases
     def detectEye(self):
-#        Only detecting one eye because some faces have a profile angle
+        # Only detecting one eye because some faces have a profile angle
         gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
-        sharingan = self.rightEye.detectMultiScale(gray)
+        eye = self.rightEye.detectMultiScale(gray)
         
-        return sharingan
+        return eye
     
-#   not a redundant cascade, frontal does not capture the same objects as profil
-#    def detectProfileFaces(self):
-#        gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
-#        profile = self.profileFace.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
-#        
-#        return profile
     
     def showFaces(self, faces):
         frame = self.frame

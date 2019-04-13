@@ -5,7 +5,9 @@ import glob
 from random import sample
 from cv2 import resize
 
-
+'''
+This class takes in a CNN model and weights to predict an image classification
+'''
 class ClassifyImage():
     
     def __init__(self, modelName):
@@ -55,7 +57,6 @@ class ClassifyImage():
         filenames.sort()
         images = [image.load_img(img, target_size = (250,250)) for img in filenames]
         
-#        ci = ClassifyImage.ClassifyImage()
         model = self.loadModelandWeights(modelName)
         results = []
         for i in range(len(images)):
