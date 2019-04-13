@@ -147,11 +147,21 @@ class ScreenTimeGui:
         self.__clusterImageCanvas.update()
     
     def showClusterResults(self):
-        self.__seeResultsButton.grid_forget()
-        
         # Change UI to get ready for cluster results
-        self.__instructionsText.grid_forget()
+        self.__seeResultsButton.grid_forget()
         self.__progBar.grid_forget()
+        
+        # Checking to see if we have no clusters
+        if(len(self.genderClusters) == 0):
+            self.__instructionsText.config(
+                    text="We could not detect any clusters.\nPlease " \
+                    "re-run the program with more optimal variables." \
+                    "\nRefer to the help (-h) for more information.")
+            return
+        
+        
+        self.__instructionsText.grid_forget()
+        
         
         # Header of window
         self.__backClusterButton = Button(self.__master,
