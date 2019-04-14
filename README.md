@@ -14,5 +14,5 @@ Then you can run it however you would like:
 `python main.py --sampleRate 10 --clusterEpsi 0.5`
 
 
-## Coming Soon
-The report that accompanies this project will be posted here soon!
+## Report
+A report that describes this project as well as our research during the project is available [here](https://github.com/AbodeSaafan/ScreenTime/blob/master/report.pdf). 
