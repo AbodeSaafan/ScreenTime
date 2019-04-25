@@ -1,4 +1,12 @@
-This project was created for CSC420 at the University of Toronto Mississauga for Dr. Sanja Fidler. 
+# ScreenTime
+This project was created for CSC420(Introduction to Image Understanding) at the University of Toronto Mississauga for Dr. Sanja Fidler.
+
+
+## Introduction
+The objective of our system is to learn the on-screen time of actors in a video clip. From the screen-time of each actor, we can calculate a percentage of how much an actor appeared. Furthermore, we are able to predict the gender of each actor. This gender classication allows us to discover the ratio of female to male actors. The system is ultimately able to give a percentage of on-screen
+time for each actor and each gender.
+
+The design of this system is explained in more detail in the report attached below. The system uses a combination of Python's openCV library and Keras/TensorFlow. The Tkinter library was also used for a user-friendly GUI.
 
 ## Running it
 From an anaconda shell (prompt), navigate to the src folder and simply run main.py
